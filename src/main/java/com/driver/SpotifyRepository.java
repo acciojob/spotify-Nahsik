@@ -78,34 +78,41 @@ public class SpotifyRepository {
 
     public Playlist createPlaylistOnLength(String mobile, String title, int length) throws Exception {
         Playlist playlist = new Playlist(title);
+        if(playlists.contains(playlist)){
+            return playlist;
+        }
         List<Song> playListSongs = new ArrayList<>();
         songs.forEach(song -> {
             if (song.getLength() == length) {
                 playListSongs.add(song);
             }
         });
+        User user = getUser(mobile);
         playlists.add(playlist);
         playlistSongMap.put(playlist, playListSongs);
-        creatorPlaylistMap.put(getUser(mobile), playlist);
+        creatorPlaylistMap.put(user, playlist);
         List<User> listener = new ArrayList<>();
-        listener.add(getUser(mobile));
+        listener.add(user);
         playlistListenerMap.put(playlist, listener);
         return playlist;
     }
 
-    private User getUser(String mobile) {
-        User user = new User();
+
+    private User getUser(String mobile) throws Exception{
         for (User eachUser : users) {
             if (Objects.equals(eachUser.getMobile(), mobile)) {
                 return eachUser;
             }
         }
-        return user;
+        throw new Exception("User does not exist");
     }
 
     public Playlist createPlaylistOnName(String mobile, String title, List<String> songTitles) throws Exception {
 
         Playlist playlist = new Playlist(title);
+        if(playlists.contains(playlist)){
+            return playlist;
+        }
         List<Song> playListsSong = new ArrayList<>();
 
         songTitles.forEach(eachSong -> {
@@ -137,25 +144,23 @@ public class SpotifyRepository {
     public Playlist findPlaylist(String mobile, String playlistTitle) throws Exception {
         Playlist playlist = new Playlist(playlistTitle);
         if (!playlists.contains(playlist)) {
-            throw new Exception("play list not found");
+            throw new Exception("playlist not found");
         }
         User user = getUser(mobile);
-        List<User> lisner = playlistListenerMap.getOrDefault(playlist, new ArrayList<>());
-        if (!lisner.contains(user)) {
-            lisner.add(user);
-            playlistListenerMap.put(playlist, lisner);
+        List<User> listener = playlistListenerMap.getOrDefault(playlist, new ArrayList<>());
+        if (!listener.contains(user)) {
+            listener.add(user);
+            playlistListenerMap.put(playlist, listener);
         }
         return playlist;
     }
 
 
 
+
     public Song likeSong(String mobile, String songTitle) throws Exception {
         User user = getUser(mobile);
         Song song = getSong(songTitle);
-        if (!users.contains(user) || !songs.contains(song)) {
-            return song;
-        }
         if (!songLikeMap.getOrDefault(song, new ArrayList<>()).contains(user)) {
             List<User> list = songLikeMap.getOrDefault(song, new ArrayList<>());
             list.add(user);
