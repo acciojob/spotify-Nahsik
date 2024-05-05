@@ -174,17 +174,58 @@ public class SpotifyRepository {
 
     public Song likeSong(String mobile, String songTitle) throws Exception {
         User user = getUser(mobile);
-        Song song = getSong(songTitle);
-        if (!songLikeMap.getOrDefault(song, new ArrayList<>()).contains(user)) {
-            List<User> list = songLikeMap.getOrDefault(song, new ArrayList<>());
-            list.add(user);
-            songLikeMap.put(song, list);
+        Song currSong = null;
+        for(Song s: songs){
+            if(songTitle.equals(s.getTitle())){
+                currSong = s;
+                break;
+            }
         }
-        return song;
+        if (null == currSong) {
+            throw new Exception("Song does not exist");
+        }
+
+        List<User> likesList = songLikeMap.getOrDefault(currSong,new ArrayList<>());
+        if(!likesList.contains(user)){
+            likesList.add(user);
+            songLikeMap.put(currSong,likesList);
+            currSong.setLikes(currSong.getLikes()+1);
+
+
+            // song -> album
+            Album currAlbum = null;
+            for(Album a: albumSongMap.keySet()){
+                if(albumSongMap.get(a).contains(currSong)){
+                    currAlbum = a;
+                    break;
+                }
+            }
+            // album -> artist
+            Artist currArtist = null;
+            for(Artist a: artistAlbumMap.keySet()){
+                if(artistAlbumMap.get(a).contains(currAlbum)){
+                    currArtist = a;
+                    break;
+                }
+            }
+            if(currArtist==null){
+                throw new Exception("artist not found");
+            }
+            currArtist.setLikes(currArtist.getLikes() + 1);
+        }
+        return currSong;
     }
 
     public String mostPopularArtist() {
-        return "name";
+        int maxLikes = 0;
+        String result ="";
+        for(Artist eachArtists: artists){
+            if(eachArtists.getLikes()>maxLikes){
+                maxLikes = eachArtists.getLikes();
+                result = eachArtists.getName();
+            }
+        }
+        return result;
     }
 
     public String mostPopularSong() {
@@ -197,6 +238,6 @@ public class SpotifyRepository {
                 maxLike = like;
             }
         }
-        return null != song ? song.getTitle() : null;
+        return null != song ? song.getTitle() : "";
     }
 }
