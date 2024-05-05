@@ -165,9 +165,6 @@ public class SpotifyRepository {
         Artist artist = null;
         for (Artist eachArtist : artists) {
               int like = 0;
-                for(){
-
-                }
         }
         return artist.getName();
     }
