@@ -153,11 +153,8 @@ public class SpotifyRepository {
     public Song likeSong(String mobile, String songTitle) throws Exception {
         User user = getUser(mobile);
         Song song = getSong(songTitle);
-        if (!users.contains(user)) {
-            throw new Exception("User does not exist");
-        }
-        if (!songs.contains(song)) {
-            throw new Exception("Song does not exist");
+        if (!users.contains(user) || !songs.contains(song)) {
+            return song;
         }
         if (!songLikeMap.getOrDefault(song, new ArrayList<>()).contains(user)) {
             List<User> list = songLikeMap.getOrDefault(song, new ArrayList<>());
