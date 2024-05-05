@@ -9,7 +9,7 @@ public class SpotifyService {
 
     //Auto-wire will not work in this case, no need to change this and add autowire
 
-    SpotifyRepository spotifyRepository = new SpotifyRepository();
+    private SpotifyRepository spotifyRepository = new SpotifyRepository();
 
     public User createUser(String name, String mobile){
         return spotifyRepository.createUser(name, mobile);
