@@ -149,15 +149,9 @@ public class SpotifyRepository {
     }
 
 
-    /**
-     * @param userName
-     * @param mobile
-     * @param songTitle
-     * @return
-     * @throws Exception
-     */
-    public Song likeSong(String userName, String mobile, String songTitle) throws Exception {
-        User user = new User(userName, mobile);
+
+    public Song likeSong(String mobile, String songTitle) throws Exception {
+        User user = getUser(mobile);
         Song song = getSong(songTitle);
         if (!users.contains(user)) {
             throw new Exception("User does not exist");

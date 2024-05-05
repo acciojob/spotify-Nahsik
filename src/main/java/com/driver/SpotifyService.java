@@ -39,8 +39,8 @@ public class SpotifyService {
        return spotifyRepository.findPlaylist(mobile, playlistTitle);
     }
 
-    public Song likeSong(String user,String mobile, String songTitle) throws Exception {
-       return spotifyRepository.likeSong(user,mobile, songTitle);
+    public Song likeSong(String mobile, String songTitle) throws Exception {
+       return spotifyRepository.likeSong(mobile, songTitle);
     }
 
     public String mostPopularArtist() {
