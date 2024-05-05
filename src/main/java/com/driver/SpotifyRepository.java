@@ -52,6 +52,9 @@ public class SpotifyRepository {
 
     public Album createAlbum(String title, String artistName) {
         Album album = new Album(title);
+        if(albums.contains(album)){
+            return album;
+        }
         albums.add(album);
         Artist artist = new Artist(artistName);
         if (!artists.contains(artist)) {
@@ -64,6 +67,12 @@ public class SpotifyRepository {
     }
 
     public Song createSong(String title, String albumName, int length) throws Exception {
+        for(Song song:songs){
+            if(song.getTitle()==title){
+                return song;
+            }
+        }
+
         Album album = new Album(albumName);
         if (!albums.contains(album)) {
             throw new Exception("Album does not exist");
