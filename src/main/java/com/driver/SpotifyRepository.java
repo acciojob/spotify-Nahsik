@@ -52,6 +52,7 @@ public class SpotifyRepository {
         if (!artists.contains(artist)) {
             artists.add(artist);
         }
+        artists.add(artist);
         return artist;
     }
 
